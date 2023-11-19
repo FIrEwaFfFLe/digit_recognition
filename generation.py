@@ -10,3 +10,12 @@ def get_natsum(amount):
         outp[s] = 1
         tests.append([inp, outp])
     return tests
+
+
+def get_multi(amount):
+    tests = []
+    for i in range(amount):
+        inp = [randint(0, 10000) / 10000 for _ in range(2)]
+        outp = [inp[0] * inp[1]]
+        tests.append([inp, outp])
+    return tests

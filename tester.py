@@ -19,7 +19,7 @@ weights = eval(read[2])
 biases = eval(read[3])
 
 while True:
-    test = list(map(int, input().split()))
+    test = list(map(float, input().split()))
 
     array = [[test[min(j, lengths[0] - 1)] * (i == 0) for j in range(lengths[i])] for i in range(n)]
 
@@ -30,4 +30,4 @@ while True:
             array[i][j] += biases[i][j]
             array[i][j] = sigmoid(array[i][j])
 
-    print(*[round(array[n - 1][i] * 100) / 100 for i in range(lengths[n - 1])])
+    print(*[array[n - 1][i] for i in range(lengths[n - 1])])
