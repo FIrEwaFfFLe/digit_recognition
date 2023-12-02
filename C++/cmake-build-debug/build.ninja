@@ -39,7 +39,7 @@ include CMakeFiles/rules.ninja
 #############################################
 # Logical path to working directory; prefix for absolute paths.
 
-cmake_ninja_workdir = D$:/Other/C+/The$ Neuralest$ Network/cmake-build-debug/
+cmake_ninja_workdir = D$:/Other/C+/The$ Neuralest$ Network$ V2/cmake-build-debug/
 # =============================================================================
 # Object build statements for EXECUTABLE target The_Neuralest_Network
 
@@ -49,7 +49,7 @@ cmake_ninja_workdir = D$:/Other/C+/The$ Neuralest$ Network/cmake-build-debug/
 
 build cmake_object_order_depends_target_The_Neuralest_Network: phony || CMakeFiles/The_Neuralest_Network.dir
 
-build CMakeFiles/The_Neuralest_Network.dir/main.cpp.obj: CXX_COMPILER__The_Neuralest_Network_Debug D$:/Other/C+/The$ Neuralest$ Network/main.cpp || cmake_object_order_depends_target_The_Neuralest_Network
+build CMakeFiles/The_Neuralest_Network.dir/main.cpp.obj: CXX_COMPILER__The_Neuralest_Network_Debug D$:/Other/C+/The$ Neuralest$ Network$ V2/main.cpp || cmake_object_order_depends_target_The_Neuralest_Network
   DEP_FILE = CMakeFiles\The_Neuralest_Network.dir\main.cpp.obj.d
   FLAGS = -g
   OBJECT_DIR = CMakeFiles\The_Neuralest_Network.dir
@@ -81,7 +81,7 @@ build The_Neuralest_Network.exe: CXX_EXECUTABLE_LINKER__The_Neuralest_Network_De
 # Utility command for edit_cache
 
 build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D "D:\Other\C+\The Neuralest Network\cmake-build-debug" && "C:\Program Files\JetBrains\CLion 2022.2\bin\cmake\win\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
+  COMMAND = cmd.exe /C "cd /D "D:\Other\C+\The Neuralest Network V2\cmake-build-debug" && "C:\Program Files\JetBrains\CLion 2022.2\bin\cmake\win\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
   DESC = No interactive CMake dialog available...
   restat = 1
 
@@ -92,7 +92,7 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D "D:\Other\C+\The Neuralest Network\cmake-build-debug" && "C:\Program Files\JetBrains\CLion 2022.2\bin\cmake\win\bin\cmake.exe" --regenerate-during-build -S"D:\Other\C+\The Neuralest Network" -B"D:\Other\C+\The Neuralest Network\cmake-build-debug""
+  COMMAND = cmd.exe /C "cd /D "D:\Other\C+\The Neuralest Network V2\cmake-build-debug" && "C:\Program Files\JetBrains\CLion 2022.2\bin\cmake\win\bin\cmake.exe" --regenerate-during-build -S"D:\Other\C+\The Neuralest Network V2" -B"D:\Other\C+\The Neuralest Network V2\cmake-build-debug""
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -110,7 +110,7 @@ build The_Neuralest_Network: phony The_Neuralest_Network.exe
 # =============================================================================
 
 #############################################
-# Folder: D:/Other/C+/The Neuralest Network/cmake-build-debug
+# Folder: D:/Other/C+/The Neuralest Network V2/cmake-build-debug
 
 build all: phony The_Neuralest_Network.exe
 
