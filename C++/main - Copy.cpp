@@ -12,11 +12,6 @@ public:
         count += 1;
         avg = summer / count;
     }
-    void clear() {
-        summer = 0;
-        count = 0;
-        avg = 0;
-    }
 };
 
 
@@ -29,9 +24,6 @@ double sigmoid_prime(double x) {
     double sig = sigmoid(x);
     return sig * (1.0 - sig);
 }
-
-
-average null_avg;
 
 
 int main() {
@@ -47,7 +39,7 @@ int main() {
     for (int i = 0; i < n; i++) {cin >> lengths[i];}
     int test_cases = 60000;
     int repeats = 10000;
-    double learning_rate = 1250;
+    double learning_rate = 10000;
     vector<double> C;
 
     double x;
@@ -99,66 +91,45 @@ int main() {
 
     // training
     freopen("log.txt", "a", stdout);
-
-    //assignments
-    vector<vector<vector<average>>> gradient_weights(n - 1);
-    vector<vector<vector<double>>> trial_weights(n - 1), d_weights(n - 1);
-    for (int i = 0; i < n - 1; i++) {
-        trial_weights[i].resize(lengths[i]);
-        d_weights[i].resize(lengths[i]);
-        gradient_weights[i].resize(lengths[i]);
-        for (int k = 0; k < lengths[i]; k++) {
-            if (i != n - 2) {
-                trial_weights[i][k].resize(lengths[i + 1] - 1);
-                d_weights[i][k].resize(lengths[i + 1] - 1);
-            }
-            else {
-                trial_weights[i][k].resize(lengths[i + 1]);
-                d_weights[i][k].resize(lengths[i + 1]);
-            }
-        }
-    }
-    vector<vector<average>> gradient_biases(n);
-    vector<vector<double>> trial_biases(n), test, array(n), z(n), d_bias_z(n), d_array(n);
-    average C_cur, C_new;
-    vector<double> y;
-    for (int i = 0; i < n; i++) {
-        d_array[i].resize(lengths[i]);
-        d_bias_z[i].resize(lengths[i]);
-        array[i].resize(lengths[i]);
-        z[i].resize(lengths[i]);
-        trial_biases[i].resize(lengths[i]);
-    }
-
     for (int repeat = 0; repeat < repeats; repeat++) {
 
-        C_cur.clear();
+        vector<vector<vector<average>>> gradient_weights(n - 1);
         for (int i = 0; i < n - 1; i++) {
+            gradient_weights[i].resize(lengths[i]);
             for (int k = 0; k < lengths[i]; k++) {
                 if (i != n - 2) {
-                    gradient_weights[i][k].assign(lengths[i + 1] - 1, null_avg);
+                    gradient_weights[i][k].resize(lengths[i + 1] - 1);
                 }
                 else {
-                    gradient_weights[i][k].assign(lengths[i + 1], null_avg);
+                    gradient_weights[i][k].resize(lengths[i + 1]);
                 }
             }
         }
+        vector<vector<average>> gradient_biases(n);
         for (int i = 0; i < n; i++) {
-            gradient_biases[i].assign(lengths[i], null_avg);
+            gradient_biases[i].resize(lengths[i]);
         }
-
+        average C_cur;
 
         for (int current_test = 0; current_test < test_cases; current_test++) {
 
-            test = testing[current_test];
-            array[0] = test[0];
-            z[0] = test[0];
-            y = test[1];
+            vector<vector<double>> test = testing[current_test];
+            vector<vector<double>> array(n);
+            vector<vector<double>> z(n);
+            for (int i = 0; i < n; i++) {
+                if (i == 0) {
+                    array[i] = test[0];
+                    z[i] = test[0];
+                } else {
+                    array[i].resize(lengths[i]);
+                    z[i].resize(lengths[i]);
+                }
+            }
+            vector<double> y = test[1];
 
             for (int i = 1; i < n; i++) {
                 for (int j = 0; j < lengths[i]; j++) {
                     if (i == n - 1 || j < lengths[i] - 1) {
-                        array[i][j] = 0;
                         for (int k = 0; k < lengths[i - 1] - 1; k++) {
                             array[i][j] += array[i - 1][k] * weights[i - 1][k][j];
                         }
@@ -179,15 +150,30 @@ int main() {
             C_cur.add(C_cur_cur);
 
 
+            vector<vector<double>> d_bias_z(n), d_array(n);
+            for (int i = 0; i < n; i++) {
+                d_array[i].resize(lengths[i]);
+                d_bias_z[i].resize(lengths[i]);
+            }
+            vector<vector<vector<double>>> d_weights(n - 1);
+            for (int i = 0; i < n - 1; i++) {
+                d_weights[i].resize(lengths[i]);
+                for (int k = 0; k < lengths[i]; k++) {
+                    if (i != n - 2) {
+                        d_weights[i][k].resize(lengths[i + 1] - 1);
+                    }
+                    else {
+                        d_weights[i][k].resize(lengths[i + 1]);
+                    }
+                }
+            }
 
             for (int i = 0; i < lengths[n - 1]; i++) {
                 d_array[n - 1][i] = (array[n - 1][i] - y[i]) / lengths[n - 1];
                 d_bias_z[n - 1][i] = d_array[n - 1][i] * sigmoid_prime(z[n - 1][i]);
             }
-
             for (int i = n - 2; i >= 0; i--) {
                 for (int k = 0; k < lengths[i]; k++) {
-                    d_array[i][k] = 0;
                     for (int j = 0; j < lengths[i + 1]; j++) {
                         if (i == n - 2 || j < lengths[i + 1] - 1) {
                             d_weights[i][k][j] = d_bias_z[i + 1][j] * array[i][k];
@@ -210,7 +196,6 @@ int main() {
                 }
             }
 
-
             for (int i = 0; i < n - 1; i++) {
                 for (int k = 0; k < lengths[i]; k++) {
                     for (int j = 0; j < lengths[i + 1]; j++) {
@@ -220,79 +205,28 @@ int main() {
                     }
                 }
             }
-
-        }
-        double cur_learning_rate = learning_rate;
-
-        while (true) {
-            C_new.clear();
-
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < lengths[i]; j++) {
-                    trial_biases[i][j] = biases[i][j] - gradient_biases[i][j].avg * cur_learning_rate;
-                }
-            }
-            for (int i = 0; i < n - 1; i++) {
-                for (int k = 0; k < lengths[i]; k++) {
-                    for (int j = 0; j < lengths[i + 1]; j++) {
-                        if (i == n - 2 || j < lengths[i + 1] - 1) {
-                            trial_weights[i][k][j] = weights[i][k][j] - gradient_weights[i][k][j].avg * cur_learning_rate;
-                        }
-                    }
-                }
-            }
-
-
-            for (int current_test = 0; current_test < test_cases; current_test++) {
-                test = testing[current_test];
-                y = test[1];
-
-                array[0] = test[0];
-
-                for (int i = 1; i < n; i++) {
-                    for (int j = 0; j < lengths[i]; j++) {
-                        if (i == n - 1 || j < lengths[i] - 1) {
-                            array[i][j] = 0;
-                            for (int k = 0; k < lengths[i - 1] - 1; k++) {
-                                array[i][j] += array[i - 1][k] * trial_weights[i - 1][k][j];
-                            }
-                            array[i][j] += trial_biases[i - 1][lengths[i - 1] - 1] * trial_weights[i - 1][lengths[i - 1] - 1][j];
-                            array[i][j] += trial_biases[i][j];
-                            array[i][j] = sigmoid(array[i][j]);
-                        }
-                    }
-                }
-
-
-                double C_cur_cur = 0;
-                for (int i = 0; i < lengths[n - 1]; i++) {
-                    C_cur_cur += pow(array[n - 1][i] - y[i], 2);
-                }
-                C_cur_cur /= (2 * lengths[n - 1]);
-                C_new.add(C_cur_cur);
-            }
-            if (C_new.avg < C_cur.avg) {C_cur.avg = C_new.avg; break;}
-            cur_learning_rate /= 2;
         }
 
+        C.push_back(C_cur.avg);
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < lengths[i]; j++) {
-                biases[i][j] -= gradient_biases[i][j].avg * cur_learning_rate;
+                biases[i][j] -= gradient_biases[i][j].avg * learning_rate;
             }
         }
         for (int i = 0; i < n - 1; i++) {
             for (int k = 0; k < lengths[i]; k++) {
                 for (int j = 0; j < lengths[i + 1]; j++) {
                     if (i == n - 2 || j < lengths[i + 1] - 1) {
-                        weights[i][k][j] -= gradient_weights[i][k][j].avg * cur_learning_rate;
+                        weights[i][k][j] -= gradient_weights[i][k][j].avg * learning_rate;
                     }
                 }
             }
         }
 
 
-        C.push_back(C_cur.avg);
+        freopen("log.txt", "a", stdout);
+        cout << " " << repeat << " " << C_cur.avg << endl;
 
         ofstream file;
         file.open("generations/trained" + to_string(repeat), ios::out);
@@ -313,9 +247,6 @@ int main() {
 
         file.close();
 
-
-        freopen("log.txt", "a", stdout);
-        cout << repeat << " " << C_cur.avg << " " << cur_learning_rate << endl;
 
     }
 
